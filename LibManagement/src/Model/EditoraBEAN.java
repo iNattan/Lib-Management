@@ -4,9 +4,9 @@ public class EditoraBEAN {
 	private int idEditoras;
 	private String nome;
 	private String documento;
-	private String situacao;
+	private int situacao;
 	
-	public EditoraBEAN(int idEditoras, String nome, String documento, String situacao) {
+	public EditoraBEAN(int idEditoras, String nome, String documento, int situacao) {
 		super();
 		this.idEditoras = idEditoras;
 		this.nome = nome;
@@ -35,10 +35,10 @@ public class EditoraBEAN {
 		this.documento = documento;
 	}
 	
-	public String getSituacao() {
+	public int getSituacao() {
 		return situacao;
 	}
-	public void setSituacao(String situacao) {
+	public void setSituacao(int situacao) {
 		this.situacao = situacao;
 	}
 }

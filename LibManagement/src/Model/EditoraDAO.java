@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class EditoraDAO {
     }
 
     public ArrayList<EditoraBEAN> findAllEditoras(){
-        return listaEditoras("SELECT * FROM editoras ORDER BY nome");
+        return listaEditoras("SELECT * FROM editoras WHERE situacao = 0 ORDER BY nome");
     }
     
     public ArrayList<EditoraBEAN> listaEditoras(String query){
@@ -44,7 +45,7 @@ public class EditoraDAO {
         try{
             while(rs.next()){
                 lista.add(new EditoraBEAN(rs.getInt("idEditoras"),rs.getString("nome"),
-                                          rs.getString("documento"), rs.getString("situacao")));
+                                          rs.getString("documento"), rs.getInt("situacao")));
 
             }
             rs.close ();
@@ -54,14 +55,49 @@ public class EditoraDAO {
     return lista;
     }
     
-    public EditoraBEAN findEditora(int id){
-        EditoraBEAN result = null;
+    public ArrayList<EditoraBEAN> findEditoraByID(int id){
+    	ArrayList<EditoraBEAN> result = new ArrayList<EditoraBEAN>();
         ResultSet rs = null;
-        rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE idEditoras=?", id);
+        rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE situacao = 0 and idEditoras=?", id);
         try{
             if(rs.next()){
-                result = new EditoraBEAN(rs.getInt("idEditoras"),rs.getString("nome"),
-                                         rs.getString("documento"), rs.getString("situacao"));
+            	EditoraBEAN obj = new EditoraBEAN(rs.getInt("idEditoras"), rs.getString("nome"),
+                        						  rs.getString("documento"), rs.getInt("situacao"));
+            	result.add(obj);
+            }
+            rs.close ();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    public ArrayList<EditoraBEAN> findEditoraByNome(String nome){
+    	ArrayList<EditoraBEAN> result = new ArrayList<EditoraBEAN>();
+        ResultSet rs = null;
+        rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE situacao = 0 and nome like ?", "%" + nome + "%");
+        try{
+            if(rs.next()){
+            	EditoraBEAN obj = new EditoraBEAN(rs.getInt("idEditoras"), rs.getString("nome"),
+                        						  rs.getString("documento"), rs.getInt("situacao"));
+            	result.add(obj);
+            }
+            rs.close ();
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+    
+    public ArrayList<EditoraBEAN> findEditoraByDocumento(String documento){
+    	ArrayList<EditoraBEAN> result = new ArrayList<EditoraBEAN>();
+        ResultSet rs = null;
+        rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE situacao = 0 and documento like ?", "%" + documento + "%");
+        try{
+            if(rs.next()){
+            	EditoraBEAN obj = new EditoraBEAN(rs.getInt("idEditoras"), rs.getString("nome"),
+                        						  rs.getString("documento"), rs.getInt("situacao"));
+            	result.add(obj);
             }
             rs.close ();
         }catch(SQLException e){
