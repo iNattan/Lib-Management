@@ -22,15 +22,19 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Controller.AutorController;
 import Controller.EditoraController;
+import Controller.LivroController;
+import Model.AutorBEAN;
 import Model.EditoraBEAN;
+import Model.LivroBEAN;
 import javax.swing.JCheckBox;
 
-public class EditoraMainGUI extends JFrame {
+public class LivroMainGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tableEditora;
+	private JTable tableLivros;
 	private JTextField txtFiltro;
 	private JButton btnPesquisar;
 
@@ -41,7 +45,7 @@ public class EditoraMainGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EditoraMainGUI frame = new EditoraMainGUI();
+					LivroMainGUI frame = new LivroMainGUI();
 					frame.setVisible(true);					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,8 +57,8 @@ public class EditoraMainGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public EditoraMainGUI() {
-		setTitle("Editoras");
+	public LivroMainGUI() {
+		setTitle("Livros");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -64,7 +68,7 @@ public class EditoraMainGUI extends JFrame {
 		
 		final JComboBox comboBoxFiltro = new JComboBox();
 		comboBoxFiltro.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		comboBoxFiltro.setModel(new DefaultComboBoxModel(new String[] {"ID", "Nome", "Documento"}));
+		comboBoxFiltro.setModel(new DefaultComboBoxModel(new String[] {"ID", "Nome", "Autor", "Editora"}));
 		comboBoxFiltro.setSelectedIndex(1);
 		comboBoxFiltro.setBounds(10, 449, 104, 23);
 		contentPane.add(comboBoxFiltro);
@@ -72,12 +76,12 @@ public class EditoraMainGUI extends JFrame {
 		final JButton btnRestaurar = new JButton("Restaurar");
 		btnRestaurar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int linhaSelecionada = tableEditora.getSelectedRow();
+				int linhaSelecionada = tableLivros.getSelectedRow();
 				if (linhaSelecionada >= 0) {
-					int idRegistroEmAtivacao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-					EditoraController editoraController = new EditoraController();
-			    	EditoraBEAN editoraAtivar = editoraController.buscaEditora(idRegistroEmAtivacao);
-			    	editoraController.activeEditora(editoraAtivar);
+					int idRegistroEmAtivacao = (Integer) tableLivros.getValueAt(linhaSelecionada, 0);
+					LivroController livroController = new LivroController();
+					LivroBEAN livroAtivar = livroController.buscaLivro(idRegistroEmAtivacao, 1);
+					livroController.activeLivro(livroAtivar);
 			    	btnPesquisar.doClick();
 				}
 			}
@@ -108,25 +112,31 @@ public class EditoraMainGUI extends JFrame {
 		       	if (!chkExcluidos.isSelected()) 
 		       		situacao = 0;
 		       	else
-		       		situacao = 1;
-		        
-		        EditoraController editoraController = new EditoraController();		  
-		        ArrayList<EditoraBEAN> resultados = new ArrayList<EditoraBEAN>();	      
+		       		situacao = 1;		        
+		       	LivroController livroController = new LivroController();		  
+		        ArrayList<LivroBEAN> resultados = new ArrayList<LivroBEAN>();	      
 		        if (filtro.isEmpty()) {
-		        	resultados = editoraController.listaEditoras(situacao);
+		        	resultados = livroController.listaLivro(situacao);
 		        } else {
 		        	if ("ID".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByID(Integer.parseInt(filtro), situacao); 
+		                resultados = livroController.listaLivroByID(Integer.parseInt(filtro), situacao); 
 		            } else if ("Nome".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByNome(filtro, situacao);
-		            } else if ("Documento".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByDocumento(filtro, situacao);
+		                resultados = livroController.listaLivroByNome(filtro, situacao);
+		            } else if ("Autor".equals(opcaoFiltro)) {
+		                resultados = livroController.listaLivroByAutor(filtro, situacao);
+		            } else if ("Editora".equals(opcaoFiltro)) {
+		            	resultados = livroController.listaLivroByEditora(filtro, situacao);
 		            }
 		        }	
-		        DefaultTableModel tabela = (DefaultTableModel) tableEditora.getModel();
+		        DefaultTableModel tabela = (DefaultTableModel) tableLivros.getModel();
 		        tabela.setRowCount(0);
-		        for (EditoraBEAN editora : resultados) {
-		        	tabela.addRow(new Object[] { editora.getIdEditoras(), editora.getNome(), editora.getDocumento() });
+		        AutorController autorController = new AutorController();
+		        EditoraController editoraController = new EditoraController();
+		        for (LivroBEAN livro : resultados) {		        	
+		        	AutorBEAN autor = autorController.buscaAutor(livro.getIdAutor());
+		        	EditoraBEAN editora = editoraController.buscaEditora(livro.getIdEditora());
+		        	
+		        	tabela.addRow(new Object[] { livro.getIdLivros(), livro.getNome(), autor.getNome(), editora.getNome(), livro.getStatus()});
 		        }
 			}
 		});
@@ -137,30 +147,30 @@ public class EditoraMainGUI extends JFrame {
 		scrollPane.setBounds(10, 64, 764, 358);
 		contentPane.add(scrollPane);
 		
-		tableEditora =new JTable();
-		tableEditora.setModel(new DefaultTableModel(
+		tableLivros =new JTable();
+		tableLivros.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
-				"ID", "Nome", "Documento"
+				"ID", "Nome", "Autor", "Editora", "Status"
 			}
 		) {
 			Class[] columnTypes = new Class[] {
-				Integer.class, String.class, String.class
+				Integer.class, String.class, String.class, String.class, String.class
 			};
 			public Class getColumnClass(int columnIndex) {
 				return columnTypes[columnIndex];
 			}
 		});
-		tableEditora.setDefaultEditor(Object.class, null);
-		tableEditora.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(tableEditora);
+		tableLivros.setDefaultEditor(Object.class, null);
+		tableLivros.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(tableLivros);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI();
+				LivroCadastroGUI telaCadastro = new LivroCadastroGUI();
 				telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				telaCadastro.setVisible(true);
 			}
@@ -174,12 +184,12 @@ public class EditoraMainGUI extends JFrame {
 				if (chkExcluidos.isSelected()) 
 					JOptionPane.showMessageDialog(null, "Não é possível editar um registro excluído.", "Erro", JOptionPane.ERROR_MESSAGE);
 				else {
-					int linhaSelecionada = tableEditora.getSelectedRow();
+					int linhaSelecionada = tableLivros.getSelectedRow();
 				    if (linhaSelecionada >= 0) {			            
-				    	int idRegistroEmEdicao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-				    	EditoraController editoraController = new EditoraController();
-				    	EditoraBEAN editoraEditar = editoraController.buscaEditora(idRegistroEmEdicao);
-				        EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI(editoraEditar);
+				    	int idRegistroEmEdicao = (Integer) tableLivros.getValueAt(linhaSelecionada, 0);
+				    	LivroController livroController = new LivroController();
+				    	LivroBEAN livroEditar = livroController.buscaLivro(idRegistroEmEdicao, 0);
+				    	LivroCadastroGUI telaCadastro = new LivroCadastroGUI(livroEditar);
 				        telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				        telaCadastro.setVisible(true);		        
 				    }
@@ -196,12 +206,12 @@ public class EditoraMainGUI extends JFrame {
 				if (chkExcluidos.isSelected()) 
 					JOptionPane.showMessageDialog(null, "Não é possível excluir um registro excluído.", "Erro", JOptionPane.ERROR_MESSAGE);
 				else {
-					int linhaSelecionada = tableEditora.getSelectedRow();
+					int linhaSelecionada = tableLivros.getSelectedRow();
 					if (linhaSelecionada >= 0) {
-						int idRegistroEmExclusao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-						EditoraController editoraController = new EditoraController();
-				    	EditoraBEAN editoraExcluir = editoraController.buscaEditora(idRegistroEmExclusao);
-				    	editoraController.inativeEditora(editoraExcluir);
+						int idRegistroEmExclusao = (Integer) tableLivros.getValueAt(linhaSelecionada, 0);
+						LivroController livroController = new LivroController();
+						LivroBEAN livroExcluir = livroController.buscaLivro(idRegistroEmExclusao, 0);
+						livroController.inativeLivro(livroExcluir);
 				    	btnPesquisar.doClick();
 					}	
 				}				

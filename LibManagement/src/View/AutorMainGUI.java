@@ -22,15 +22,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Controller.EditoraController;
-import Model.EditoraBEAN;
+import Controller.AutorController;
+import Model.AutorBEAN;
 import javax.swing.JCheckBox;
 
-public class EditoraMainGUI extends JFrame {
+public class AutorMainGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTable tableEditora;
+	private JTable tableAutores;
 	private JTextField txtFiltro;
 	private JButton btnPesquisar;
 
@@ -41,7 +41,7 @@ public class EditoraMainGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EditoraMainGUI frame = new EditoraMainGUI();
+					AutorMainGUI frame = new AutorMainGUI();
 					frame.setVisible(true);					
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -53,8 +53,8 @@ public class EditoraMainGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public EditoraMainGUI() {
-		setTitle("Editoras");
+	public AutorMainGUI() {
+		setTitle("Autores");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
@@ -72,12 +72,12 @@ public class EditoraMainGUI extends JFrame {
 		final JButton btnRestaurar = new JButton("Restaurar");
 		btnRestaurar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int linhaSelecionada = tableEditora.getSelectedRow();
+				int linhaSelecionada = tableAutores.getSelectedRow();
 				if (linhaSelecionada >= 0) {
-					int idRegistroEmAtivacao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-					EditoraController editoraController = new EditoraController();
-			    	EditoraBEAN editoraAtivar = editoraController.buscaEditora(idRegistroEmAtivacao);
-			    	editoraController.activeEditora(editoraAtivar);
+					int idRegistroEmAtivacao = (Integer) tableAutores.getValueAt(linhaSelecionada, 0);
+					AutorController autorController = new AutorController();
+			    	AutorBEAN editoraAtivar = autorController.buscaAutor(idRegistroEmAtivacao);
+			    	autorController.activeAutor(editoraAtivar);
 			    	btnPesquisar.doClick();
 				}
 			}
@@ -108,25 +108,24 @@ public class EditoraMainGUI extends JFrame {
 		       	if (!chkExcluidos.isSelected()) 
 		       		situacao = 0;
 		       	else
-		       		situacao = 1;
-		        
-		        EditoraController editoraController = new EditoraController();		  
-		        ArrayList<EditoraBEAN> resultados = new ArrayList<EditoraBEAN>();	      
+		       		situacao = 1;		        
+		       	AutorController autorController = new AutorController();		  
+		        ArrayList<AutorBEAN> resultados = new ArrayList<AutorBEAN>();	      
 		        if (filtro.isEmpty()) {
-		        	resultados = editoraController.listaEditoras(situacao);
+		        	resultados = autorController.listaAutores(situacao);
 		        } else {
 		        	if ("ID".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByID(Integer.parseInt(filtro), situacao); 
+		                resultados = autorController.listaAutoresByID(Integer.parseInt(filtro), situacao); 
 		            } else if ("Nome".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByNome(filtro, situacao);
+		                resultados = autorController.listaAutoresByNome(filtro, situacao);
 		            } else if ("Documento".equals(opcaoFiltro)) {
-		                resultados = editoraController.listaEditorasByDocumento(filtro, situacao);
+		                resultados = autorController.listaAutoresByDocumento(filtro, situacao);
 		            }
 		        }	
-		        DefaultTableModel tabela = (DefaultTableModel) tableEditora.getModel();
+		        DefaultTableModel tabela = (DefaultTableModel) tableAutores.getModel();
 		        tabela.setRowCount(0);
-		        for (EditoraBEAN editora : resultados) {
-		        	tabela.addRow(new Object[] { editora.getIdEditoras(), editora.getNome(), editora.getDocumento() });
+		        for (AutorBEAN editora : resultados) {
+		        	tabela.addRow(new Object[] { editora.getIdAutores(), editora.getNome(), editora.getDocumento() });
 		        }
 			}
 		});
@@ -137,8 +136,8 @@ public class EditoraMainGUI extends JFrame {
 		scrollPane.setBounds(10, 64, 764, 358);
 		contentPane.add(scrollPane);
 		
-		tableEditora =new JTable();
-		tableEditora.setModel(new DefaultTableModel(
+		tableAutores =new JTable();
+		tableAutores.setModel(new DefaultTableModel(
 			new Object[][] {
 			},
 			new String[] {
@@ -152,15 +151,15 @@ public class EditoraMainGUI extends JFrame {
 				return columnTypes[columnIndex];
 			}
 		});
-		tableEditora.setDefaultEditor(Object.class, null);
-		tableEditora.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		scrollPane.setViewportView(tableEditora);
+		tableAutores.setDefaultEditor(Object.class, null);
+		tableAutores.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(tableAutores);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI();
+				AutorCadastroGUI telaCadastro = new AutorCadastroGUI();
 				telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				telaCadastro.setVisible(true);
 			}
@@ -174,12 +173,12 @@ public class EditoraMainGUI extends JFrame {
 				if (chkExcluidos.isSelected()) 
 					JOptionPane.showMessageDialog(null, "Não é possível editar um registro excluído.", "Erro", JOptionPane.ERROR_MESSAGE);
 				else {
-					int linhaSelecionada = tableEditora.getSelectedRow();
+					int linhaSelecionada = tableAutores.getSelectedRow();
 				    if (linhaSelecionada >= 0) {			            
-				    	int idRegistroEmEdicao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-				    	EditoraController editoraController = new EditoraController();
-				    	EditoraBEAN editoraEditar = editoraController.buscaEditora(idRegistroEmEdicao);
-				        EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI(editoraEditar);
+				    	int idRegistroEmEdicao = (Integer) tableAutores.getValueAt(linhaSelecionada, 0);
+				    	AutorController autorController = new AutorController();
+				    	AutorBEAN autorEditar = autorController.buscaAutor(idRegistroEmEdicao);
+				        AutorCadastroGUI telaCadastro = new AutorCadastroGUI(autorEditar);
 				        telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				        telaCadastro.setVisible(true);		        
 				    }
@@ -196,12 +195,12 @@ public class EditoraMainGUI extends JFrame {
 				if (chkExcluidos.isSelected()) 
 					JOptionPane.showMessageDialog(null, "Não é possível excluir um registro excluído.", "Erro", JOptionPane.ERROR_MESSAGE);
 				else {
-					int linhaSelecionada = tableEditora.getSelectedRow();
+					int linhaSelecionada = tableAutores.getSelectedRow();
 					if (linhaSelecionada >= 0) {
-						int idRegistroEmExclusao = (Integer) tableEditora.getValueAt(linhaSelecionada, 0);
-						EditoraController editoraController = new EditoraController();
-				    	EditoraBEAN editoraExcluir = editoraController.buscaEditora(idRegistroEmExclusao);
-				    	editoraController.inativeEditora(editoraExcluir);
+						int idRegistroEmExclusao = (Integer) tableAutores.getValueAt(linhaSelecionada, 0);
+						AutorController autorController = new AutorController();
+						AutorBEAN autorExcluir = autorController.buscaAutor(idRegistroEmExclusao);
+						autorController.inativeAutor(autorExcluir);
 				    	btnPesquisar.doClick();
 					}	
 				}				

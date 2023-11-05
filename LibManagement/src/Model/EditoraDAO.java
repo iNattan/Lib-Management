@@ -64,10 +64,10 @@ public class EditoraDAO {
     	return listaEditoras("SELECT * FROM editoras WHERE idEditoras=? and situacao = ? ORDER BY nome", id, situacao);
     }
     
-    public EditoraBEAN findEditora(int id, int situacao){
+    public EditoraBEAN findEditora(int id){
     	EditoraBEAN result = null;
     	ResultSet rs = null;
-    	rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE idEditoras=? and situacao = ? ORDER BY nome", id, situacao);
+    	rs = MySQLDAO.getResultSet("SELECT * FROM editoras WHERE idEditoras=? ORDER BY nome", id);
     	try{
     		if(rs.next()){
     			result = new EditoraBEAN(rs.getInt("idEditoras"),rs.getString("nome"),

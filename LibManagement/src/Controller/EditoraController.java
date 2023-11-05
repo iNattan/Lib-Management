@@ -6,7 +6,6 @@ import Model.EditoraBEAN;
 import Model.EditoraDAO;
 
 public class EditoraController {
-	//PAREI EM ARRUMAR EDIÇÃO
 	
 	public long addEditora(EditoraBEAN editora){
 		return EditoraDAO.getInstance().create(editora);
@@ -40,7 +39,7 @@ public class EditoraController {
 		return EditoraDAO.getInstance().findEditoraByDocumento(documento, situacao);
 	}	
 	
-	public EditoraBEAN buscaEditora(int id, int situacao) {
-		return EditoraDAO.getInstance().findEditora(id, situacao);
+	public EditoraBEAN buscaEditora(int id) {
+		return EditoraDAO.getInstance().findEditora(id);
 	}
 }

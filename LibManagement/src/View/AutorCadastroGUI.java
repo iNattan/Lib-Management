@@ -5,8 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import Model.EditoraBEAN;
-import Controller.EditoraController;
+import Model.AutorBEAN;
+import Controller.AutorController;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -15,7 +15,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class EditoraCadastroGUI extends JFrame {
+public class AutorCadastroGUI extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -25,18 +25,18 @@ public class EditoraCadastroGUI extends JFrame {
     private JLabel lblDocumento;
     private JButton btnCancelar;
     private JButton btnGravar;
-    private EditoraBEAN editoraEmEdicao;
+    private AutorBEAN autorEmEdicao;
 
-    public EditoraCadastroGUI() {
-        setTitle("Cadastro de Editora");
+    public AutorCadastroGUI() {
+        setTitle("Cadastro de Autor");
         initComponents();
     }
-    public EditoraCadastroGUI(EditoraBEAN editoraEditar) {
-        setTitle("Edição de Editora");
-        editoraEmEdicao = editoraEditar;
+    public AutorCadastroGUI(AutorBEAN autorEditar) {
+        setTitle("Edição de Autor");
+        autorEmEdicao = autorEditar;
         initComponents();
-        txtNome.setText(editoraEditar.getNome());
-        txtDocumento.setText(editoraEditar.getDocumento());
+        txtNome.setText(autorEditar.getNome());
+        txtDocumento.setText(autorEditar.getDocumento());
     }
 
     private void initComponents() {
@@ -78,23 +78,23 @@ public class EditoraCadastroGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String nome = txtNome.getText();
                 String documento = txtDocumento.getText();
-                EditoraController editoraController = new EditoraController();
+                AutorController autorController = new AutorController();
 
                 if (nome.isEmpty() || documento.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Por favor, preencha o nome e o documento.", "Erro", JOptionPane.ERROR_MESSAGE);
                 } else {
-                    if (editoraEmEdicao == null) {
-                        EditoraBEAN editora = new EditoraBEAN(0, nome, documento, 0);
-                        long resultado = editoraController.addEditora(editora);
+                    if (autorEmEdicao == null) {
+                        AutorBEAN autor = new AutorBEAN(0, nome, documento, 0);
+                        long resultado = autorController.addAutor(autor);
                         if (resultado > 0) {
                             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                         } else {
                             JOptionPane.showMessageDialog(null, "Falha ao cadastrar. Por favor, tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
-                        editoraEmEdicao.setNome(nome);
-                        editoraEmEdicao.setDocumento(documento);
-                        long resultado = editoraController.updateEditora(editoraEmEdicao);
+                        autorEmEdicao.setNome(nome);
+                        autorEmEdicao.setDocumento(documento);
+                        long resultado = autorController.updateAutor(autorEmEdicao);
                         if (resultado == 0) {
                             JOptionPane.showMessageDialog(null, "Edição realizada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                         } else {
