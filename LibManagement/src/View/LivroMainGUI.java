@@ -173,6 +173,7 @@ public class LivroMainGUI extends JFrame {
 				LivroCadastroGUI telaCadastro = new LivroCadastroGUI();
 				telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				telaCadastro.setVisible(true);
+				centralizarJanela(telaCadastro, contentPane);
 			}
 		}); 
 		btnAdicionar.setBounds(10, 22, 89, 23);
@@ -191,7 +192,8 @@ public class LivroMainGUI extends JFrame {
 				    	LivroBEAN livroEditar = livroController.buscaLivro(idRegistroEmEdicao, 0);
 				    	LivroCadastroGUI telaCadastro = new LivroCadastroGUI(livroEditar);
 				        telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				        telaCadastro.setVisible(true);		        
+				        telaCadastro.setVisible(true);
+				        centralizarJanela(telaCadastro, contentPane);
 				    }
 				}				
 			}
@@ -242,4 +244,10 @@ public class LivroMainGUI extends JFrame {
 		btnLimpar.setBounds(10, 511, 89, 23);
 		contentPane.add(btnLimpar);					
 	}
+	
+	public static void centralizarJanela(JFrame janela, JPanel painelPrincipal) {
+	    int x = (painelPrincipal.getWidth() - janela.getWidth()) / 2;
+	    int y = (painelPrincipal.getHeight() - janela.getHeight()) / 2;
+	    janela.setLocation(x, y);
+	}	
 }

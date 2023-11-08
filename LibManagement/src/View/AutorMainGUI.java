@@ -162,6 +162,7 @@ public class AutorMainGUI extends JFrame {
 				AutorCadastroGUI telaCadastro = new AutorCadastroGUI();
 				telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				telaCadastro.setVisible(true);
+				centralizarJanela(telaCadastro, contentPane);				
 			}
 		}); 
 		btnAdicionar.setBounds(10, 22, 89, 23);
@@ -180,7 +181,8 @@ public class AutorMainGUI extends JFrame {
 				    	AutorBEAN autorEditar = autorController.buscaAutor(idRegistroEmEdicao);
 				        AutorCadastroGUI telaCadastro = new AutorCadastroGUI(autorEditar);
 				        telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				        telaCadastro.setVisible(true);		        
+				        telaCadastro.setVisible(true);		
+				        centralizarJanela(telaCadastro, contentPane);
 				    }
 				}				
 			}
@@ -230,5 +232,11 @@ public class AutorMainGUI extends JFrame {
 		btnLimpar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 		btnLimpar.setBounds(10, 511, 89, 23);
 		contentPane.add(btnLimpar);					
+	}
+	
+	public static void centralizarJanela(JFrame janela, JPanel painelPrincipal) {
+	    int x = (painelPrincipal.getWidth() - janela.getWidth()) / 2;
+	    int y = (painelPrincipal.getHeight() - janela.getHeight()) / 2;
+	    janela.setLocation(x, y);
 	}
 }

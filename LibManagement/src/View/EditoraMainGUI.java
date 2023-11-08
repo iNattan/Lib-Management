@@ -163,6 +163,7 @@ public class EditoraMainGUI extends JFrame {
 				EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI();
 				telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				telaCadastro.setVisible(true);
+				centralizarJanela(telaCadastro, contentPane);				
 			}
 		}); 
 		btnAdicionar.setBounds(10, 22, 89, 23);
@@ -181,7 +182,8 @@ public class EditoraMainGUI extends JFrame {
 				    	EditoraBEAN editoraEditar = editoraController.buscaEditora(idRegistroEmEdicao);
 				        EditoraCadastroGUI telaCadastro = new EditoraCadastroGUI(editoraEditar);
 				        telaCadastro.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				        telaCadastro.setVisible(true);		        
+				        telaCadastro.setVisible(true);		  
+				        centralizarJanela(telaCadastro, contentPane);
 				    }
 				}				
 			}
@@ -232,4 +234,10 @@ public class EditoraMainGUI extends JFrame {
 		btnLimpar.setBounds(10, 511, 89, 23);
 		contentPane.add(btnLimpar);					
 	}
+	
+	public static void centralizarJanela(JFrame janela, JPanel painelPrincipal) {
+	    int x = (painelPrincipal.getWidth() - janela.getWidth()) / 2;
+	    int y = (painelPrincipal.getHeight() - janela.getHeight()) / 2;
+	    janela.setLocation(x, y);
+	}	
 }
