@@ -46,4 +46,16 @@ public class LivroController {
 	public LivroBEAN buscaLivro(int id, int situacao) {
 		return LivroDAO.getInstance().findLivro(id, situacao);
 	}
+	
+	public ArrayList<LivroBEAN> listaLivroDisponiveis(int situacao){
+		return LivroDAO.getInstance().findAllLivrosDisponiveis(situacao);
+	}
+	
+	public ArrayList<LivroBEAN> listaLivroDisponiveisByNome(String nome, int situacao){
+		return LivroDAO.getInstance().findLivroDisponivelByNome(nome, situacao);
+	}
+	
+	public long atualizaStatus(int idLivro, String status){
+		return LivroDAO.getInstance().updateStatus(idLivro, status);
+	}
 }

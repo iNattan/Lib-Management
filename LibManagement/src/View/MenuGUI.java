@@ -91,6 +91,18 @@ public class MenuGUI extends JFrame {
 		});
 		btnLivro.setBounds(220, 11, 89, 23);
 		pnBotoes.add(btnLivro);	
+		
+		JButton btnAmigo = new JButton("Amigos");
+		btnAmigo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AmigoMainGUI telaAmigo = new AmigoMainGUI();
+				telaAmigo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				telaAmigo.setVisible(true);
+				centralizarJanela(telaAmigo, contentPane);
+			}
+		});
+		btnAmigo.setBounds(325, 11, 89, 23);
+		pnBotoes.add(btnAmigo);
 	}
 	
 	public static void centralizarJanela(JFrame janela, JPanel painelPrincipal) {

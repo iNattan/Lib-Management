@@ -28,6 +28,11 @@ public class LivroDAO {
         String query = "UPDATE livros SET nome=?, idAutor=?, idEditora=?, status=?, situacao=? WHERE idLivros=?";
         return MySQLDAO.executeQuery(query, livro.getNome(), livro.getIdAutor(), livro.getIdEditora(), livro.getStatus(), livro.getSituacao(), livro.getIdLivros());
     }
+    
+    public long updateStatus(int idLivro, String status){
+        String query = "UPDATE livros SET status=? WHERE idLivros=?";
+        return MySQLDAO.executeQuery(query, status, idLivro);
+    }
 
     public void inative(LivroBEAN livro){       
         String query = "UPDATE livros SET situacao=1 WHERE idLivros = ?";
@@ -58,7 +63,11 @@ public class LivroDAO {
     
     public ArrayList<LivroBEAN> findAllLivros(int situacao){
         return listaLivros("SELECT idLivros, nome, idAutor, idEditora, status, situacao FROM livros WHERE situacao = ? ORDER BY nome", situacao);
-    }    
+    }
+    
+    public ArrayList<LivroBEAN> findAllLivrosDisponiveis(int situacao){
+        return listaLivros("SELECT idLivros, nome, idAutor, idEditora, status, situacao FROM livros WHERE situacao = ? and status = 'Disponível' ORDER BY nome", situacao);
+    } 
     
     public ArrayList<LivroBEAN> findLivroByID(int id, int situacao){
     	return listaLivros("SELECT idLivros, nome, idAutor, idEditora, status, situacao FROM livros WHERE idLivros=? and situacao = ? ORDER BY nome", id, situacao);
@@ -82,7 +91,11 @@ public class LivroDAO {
     
     public ArrayList<LivroBEAN> findLivroByNome(String nome, int situacao){
     	return listaLivros("SELECT idLivros, nome, idAutor, idEditora, status, situacao FROM livros WHERE nome like ? and situacao = ? ORDER BY nome", "%" + nome + "%", situacao);     
-    }        
+    }   
+    
+    public ArrayList<LivroBEAN> findLivroDisponivelByNome(String nome, int situacao){
+    	return listaLivros("SELECT idLivros, nome, idAutor, idEditora, status, situacao FROM livros WHERE nome like ? and situacao = ? and status = 'Disponível' ORDER BY nome", "%" + nome + "%", situacao);     
+    }
     
     public ArrayList<LivroBEAN> findLivroByAutor(String autor, int situacao){
     	return listaLivros("SELECT "

@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,8 +29,11 @@ public class LivroCadastroGUI extends JFrame {
     private JPanel contentPane;
     private JLabel lblNewLabel;
     private JTextField txtNome;
+    private JLabel txtStatus;
     private JButton btnCancelar;
     private JButton btnGravar;
+    private JComboBox<String> cbAutor;
+    private JComboBox<String> cbEditora;
     private LivroBEAN livroEmEdicao;
 
     public LivroCadastroGUI() {
@@ -41,6 +45,33 @@ public class LivroCadastroGUI extends JFrame {
         livroEmEdicao = livroEditar;
         initComponents();
         txtNome.setText(livroEditar.getNome());
+        txtStatus.setText(livroEditar.getStatus());
+        if (txtStatus.getText().equals("Disponível")) {
+        	txtStatus.setForeground(Color.GREEN);
+        }
+        else {
+        	txtStatus.setForeground(Color.GRAY);
+        }
+        txtStatus.setVisible(true);
+        AutorController autorController = new AutorController();
+        ArrayList<AutorBEAN> autores = autorController.listaAutores(0);
+        for (int i = 0; i < autores.size(); i++) {
+            String item = autores.get(i).getIdAutores() + " - " + autores.get(i).getNome();
+            cbAutor.addItem(item);          
+            if (autores.get(i).getIdAutores() == livroEmEdicao.getIdAutor()) {
+                cbAutor.setSelectedIndex(i);
+            }
+        }
+
+        EditoraController editoraController = new EditoraController();
+        ArrayList<EditoraBEAN> editoras = editoraController.listaEditoras(0);
+        for (int i = 0; i < editoras.size(); i++) {
+            String item = editoras.get(i).getIdEditoras() + " - " + editoras.get(i).getNome();
+            cbEditora.addItem(item);
+            if (editoras.get(i).getIdEditoras() == livroEmEdicao.getIdEditora()) {
+                cbEditora.setSelectedIndex(i);
+            }
+        }
     }
 
     private void initComponents() {
@@ -68,7 +99,7 @@ public class LivroCadastroGUI extends JFrame {
         btnCancelar.setBounds(129, 139, 89, 23);
         contentPane.add(btnCancelar);
         
-        final JComboBox cbAutor = new JComboBox();
+        cbAutor = new JComboBox<String>();
         cbAutor.setBounds(10, 84, 209, 22);
         contentPane.add(cbAutor);
         
@@ -83,7 +114,7 @@ public class LivroCadastroGUI extends JFrame {
             cbAutor.addItem(item);
         }
         
-        final JComboBox cbEditora = new JComboBox();
+        cbEditora = new JComboBox<String>();
         cbEditora.setBounds(265, 84, 209, 22);
         contentPane.add(cbEditora);
         
@@ -112,7 +143,7 @@ public class LivroCadastroGUI extends JFrame {
                     JOptionPane.showMessageDialog(null, "Por favor, preencha o nome.", "Erro", JOptionPane.ERROR_MESSAGE);
                 } else {
                     if (livroEmEdicao == null) {
-                        LivroBEAN livro = new LivroBEAN(0, nome, idAutor, idEditora , "Disponivel", 0);
+                        LivroBEAN livro = new LivroBEAN(0, nome, idAutor, idEditora , "Disponível", 0);
                         long resultado = livroController.addLivro(livro);
                         if (resultado > 0) {
                             JOptionPane.showMessageDialog(null, "Cadastro realizado com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
@@ -136,8 +167,12 @@ public class LivroCadastroGUI extends JFrame {
             }
         });
         btnGravar.setBounds(259, 139, 89, 23);
-        contentPane.add(btnGravar);        
-               
+        contentPane.add(btnGravar);
+        
+        txtStatus = new JLabel("_______");
+        txtStatus.setBounds(382, 11, 92, 14);
+        txtStatus.setVisible(false);
+        contentPane.add(txtStatus);
     }
     
     private int extrairID(String item) {
