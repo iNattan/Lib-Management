@@ -112,4 +112,17 @@ public class LivroDAO {
 	 	 		 	     + "INNER JOIN editoras e on l.idEditora = e.idEditoras "
 	 	 		 	     + "WHERE e.nome like ? and l.situacao = ? ORDER BY l.nome", "%" + editora + "%", situacao);      
     } 
+    
+    public void atualizaLivros(int id){
+    	ArrayList<LivroBEAN> lista = listaLivros("SELECT "
+    										   + "l.idLivros, l.nome, l.idAutor, l.idEditora, l.status, l.situacao "
+    										   + "FROM emprestimos e "
+    										   + "INNER JOIN emprestimolivros el ON e.idEmprestimos = el.idEmprestimos "
+    										   + "INNER JOIN livros l ON el.idLivros = l.idLivros "
+    										   + "WHERE e.idEmprestimos = ?", id); 
+    	for (LivroBEAN livro : lista) {
+    		LivroDAO livroDAO = new LivroDAO(); 
+            livroDAO.updateStatus(livro.getIdLivros(), "Disponível");
+        }
+    }  
 }

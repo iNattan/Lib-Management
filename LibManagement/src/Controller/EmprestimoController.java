@@ -11,23 +11,27 @@ public class EmprestimoController {
 		return EmprestimoDAO.getInstance().create(emprestimo);
 	}
 	
-	public ArrayList<EmprestimoBEAN> listaEmprestimo(int situacao){
-		return EmprestimoDAO.getInstance().findAllEmprestimos(situacao);
+	public ArrayList<EmprestimoBEAN> listaEmprestimo(int status){
+		return EmprestimoDAO.getInstance().findAllEmprestimos(status);
 	}
 	
-	public ArrayList<EmprestimoBEAN> listaEmprestimoByID(int id, int situacao){
-		return EmprestimoDAO.getInstance().findEmprestimoByID(id, situacao);
+	public ArrayList<EmprestimoBEAN> listaEmprestimoByID(int id, int status){
+		return EmprestimoDAO.getInstance().findEmprestimoByID(id, status);
 	}
 	
-	public ArrayList<EmprestimoBEAN> listaEmprestimoByAmigo(String amigo, int situacao){
-		return EmprestimoDAO.getInstance().findEmprestimoByNome(amigo, situacao);
+	public ArrayList<EmprestimoBEAN> listaEmprestimoByAmigo(String amigo, int status){
+		return EmprestimoDAO.getInstance().findEmprestimoByAmigo(amigo, status);
 	}
 	
-	/*public EmprestimoBEAN buscaEmprestimo(int id, int situacao) {
-		return EmprestimoDAO.getInstance().findEmprestimo(id, situacao);
-	}*/
+	public EmprestimoBEAN buscaEmprestimo(int id) {
+		return EmprestimoDAO.getInstance().findEmprestimo(id);
+	}
 	
-	public long atualizaStatus(int idEmprestimo, String status){
+	public long atualizaStatus(int idEmprestimo, int status){
 		return EmprestimoDAO.getInstance().updateStatus(idEmprestimo, status);
+	}
+	
+	public long atualizaSituacao(int idEmprestimo, String situacao){
+		return EmprestimoDAO.getInstance().updateSituacao(idEmprestimo, situacao);
 	}
 }

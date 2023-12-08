@@ -103,6 +103,18 @@ public class MenuGUI extends JFrame {
 		});
 		btnAmigo.setBounds(325, 11, 89, 23);
 		pnBotoes.add(btnAmigo);
+		
+		JButton btnEmprestimos = new JButton("Empréstimos");
+		btnEmprestimos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EmprestimoMainGUI telaEmprestimo = new EmprestimoMainGUI();
+				telaEmprestimo.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				telaEmprestimo.setVisible(true);
+				centralizarJanela(telaEmprestimo, contentPane);
+			}
+		});
+		btnEmprestimos.setBounds(427, 11, 123, 23);
+		pnBotoes.add(btnEmprestimos);
 	}
 	
 	public static void centralizarJanela(JFrame janela, JPanel painelPrincipal) {

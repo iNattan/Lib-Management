@@ -56,6 +56,7 @@ public class EmprestimoCadastroGUI extends JFrame {
     private JButton btnPesquisar;
     private JButton btnCancelar;
     private JButton btnGravar;
+    private EmprestimoBEAN emprestimoEmEdicao;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -71,9 +72,23 @@ public class EmprestimoCadastroGUI extends JFrame {
 	}
 
 	public EmprestimoCadastroGUI() {
-		initComponents();		
-		
-	}
+        setTitle("Cadastro de Empréstimo");
+        initComponents();
+    }
+    /*public EmprestimoCadastroGUI(EmprestimoBEAN emprestimoEditar) {
+        setTitle("Edição de Empréstimo");
+        emprestimoEmEdicao = emprestimoEditar;
+        initComponents();
+        AmigoController amigoController = new AmigoController();
+        ArrayList<AmigoBEAN> amigos = amigoController.listaAmigos(0);
+        for (int i = 0; i < amigos.size(); i++) {
+            String item = amigos.get(i).getIdAmigos() + " - " + amigos.get(i).getNome();
+            cbAmigo.addItem(item);          
+            if (amigos.get(i).getIdAmigos() == emprestimoEmEdicao.getidAmigos()) {
+            	cbAmigo.setSelectedIndex(i);
+            }
+        }
+    }*/
 	
 	private void initComponents() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -273,10 +288,11 @@ public class EmprestimoCadastroGUI extends JFrame {
     				    LivroBEAN livro =  livroController.buscaLivro(idLivro, 0);    				        				    
     				    listaLivros.add(livro); 
     				}    				
-    				EmprestimoBEAN emprestimo = new EmprestimoBEAN(0, data, "Normal", amigo, listaLivros);
+    				EmprestimoBEAN emprestimo = new EmprestimoBEAN(0, data, 0, amigo, "Normal", listaLivros);
     				
     				EmprestimoController emprestimoController = new EmprestimoController();
     				emprestimoController.addEmprestimo(emprestimo);
+    				dispose();
     			}
     		});
     		btnGravar.setBounds(340, 565, 89, 23);

@@ -58,4 +58,8 @@ public class LivroController {
 	public long atualizaStatus(int idLivro, String status){
 		return LivroDAO.getInstance().updateStatus(idLivro, status);
 	}
+	
+	public void atualizaLivros(int id) {
+		LivroDAO.getInstance().atualizaLivros(id);
+	}
 }
